@@ -9,11 +9,12 @@ const jwt = require('jsonwebtoken')
 
 const login = async (req, res, next) => {
     const { email, password } = req.body;
-
+    
     try {
         // Check if the user is an admin
         let user = await Admin.findOne({ email });
         if (!user) {
+            console.log(user)
             // If user is not an admin, check if it's a hospital user
             user = await Hospital.findOne({ email });
         }
@@ -38,5 +39,10 @@ const login = async (req, res, next) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+
+
+
+
 
 module.exports = login;

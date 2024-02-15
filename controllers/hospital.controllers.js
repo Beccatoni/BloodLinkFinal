@@ -97,12 +97,23 @@ const login = async (req, res, next) => {
 };
 
 
+const listHospitals = async (req, res) => {
+    try {
+        const hospitals = await Hospital.find();
+        res.status(200).json({ hospitals });
+    } catch (error) {
+        console.error('Error listing hospitals:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 
 
 
 module.exports = {
     addHospital, 
     getHospital,
-    login
+    login,
+    listHospitals
 };
    
