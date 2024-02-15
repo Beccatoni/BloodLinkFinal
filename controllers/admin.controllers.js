@@ -4,7 +4,7 @@ const Hospital = require("../models/hospital.models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const adminLogin = async (req, res) => {
+const generalLogin = async (req, res) => {
   try {
     const { email, password, role } = req.body;
     var admin = {};
@@ -117,7 +117,7 @@ const getAdminProfile = async (req, res, next) => {
 };
 
 module.exports = {
-  adminLogin,
+  generalLogin,
   getAllAdmins,
   getAdminProfile,
 };
