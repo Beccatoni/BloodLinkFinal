@@ -1,4 +1,7 @@
+require('dotenv').config();
+
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const Hospital = require('../models/hospital.models')
 const sendEmail = require('../middlewares/email')
 
@@ -27,13 +30,14 @@ const addHospital = async (req, res) => {
             password: hashedPassword,
             city,
             province,
+            role:'hospital',
             district,
             status: 'Approved' // Set status to 'Approved' since admin is adding the hospital
         });
         await newHospital.save();
 
         // Send email with login credentials
-        const message = `Hello ${hospitalName},\n\nYour login credentials are:\n\nEmail: ${email}\nPassword: ${password}\n\nPlease use these credentials to log in.`;
+        const message = `Hello ${hospitalName} hospital,\n\nYour login credentials are:\n\nEmail: ${email}\nPassword: ${password}\n\nPlease use these credentials to log in.`;
         const subject = 'Welcome to BloodLink System';
         await sendEmail(email, message, subject);
 
@@ -64,9 +68,41 @@ const getHospital = async (req, res) => {
 
 
 
+const login = async (req, res, next) => {
+    const { email, password } = req.body;
+
+    try {
+        // Find the hospital by email
+        const hospital = await Hospital.findOne({ email });
+
+        // If hospital not found
+        if (!hospital) {
+            return res.status(404).json({ message: 'Hospital not found' });
+        }
+
+        // Check if password is correct
+        const isPasswordValid = await bcrypt.compare(password, hospital.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: 'Invalid password' });
+        }
+
+        // Generate JWT token
+        const token = jwt.sign({ id: hospital._id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+
+        res.status(200).json({ message:'Login successful 👌', token });
+    } catch (error) {
+        console.error('Error in login:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+
+
 
 module.exports = {
     addHospital, 
-    getHospital
+    getHospital,
+    login
 };
    

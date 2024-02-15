@@ -3,7 +3,7 @@ const sendEmail = require('../middlewares/email')
 
 
 const createAppointment = async (req, res, next) => {
-    const { fullName, mobileNumber, nationalID, email, city, province, district, bloodGroup, age, profilePicture, gender, reason, donationAvailability } = req.body;
+    const { fullName, mobileNumber, nationalID, email, province, bloodGroup, age, district,  gender, donationAvailability } = req.body;
 
     try {
         const newAppointment = new AppointmentModel({
@@ -11,14 +11,11 @@ const createAppointment = async (req, res, next) => {
             mobileNumber,
             nationalID,
             email,
-            city,
             province,
             district,
             bloodGroup,
             age,
-            profilePicture,
             gender,
-            reason,
             donationAvailability
         });
 
@@ -34,7 +31,7 @@ const createAppointment = async (req, res, next) => {
 // Controller to list all appointments
 const listAppointments = async (req, res, next) => {
     try {
-        const appointments = await AppointmentModel.find();
+        const appointments = await AppointmentModel.find({});
         res.status(200).json({ success: true, data: appointments });
     } catch (error) {
         console.error('Error listing appointments:', error);
@@ -86,7 +83,7 @@ const rejectAppointment = async (req, res) => {
     const { rejectionReason } = req.body;
 
     try {
-        const appointment = await Appointment.findByIdAndUpdate(appointmentId, { status: 'rejected', rejectionReason }, { new: true });
+        const appointment = await AppointmentModel.findByIdAndUpdate(appointmentId, { status: 'rejected', rejectionReason }, { new: true });
         if (!appointment) {
             return res.status(404).json({ success: false, message: 'Appointment not found' });
         }

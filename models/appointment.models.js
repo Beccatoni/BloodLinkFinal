@@ -18,7 +18,7 @@ const AppointmentSchema = new Schema({
         required: true,
         unique: true,  
     },
-    city: { type: String, required: true}, 
+    // city: { type: String, required: false}, 
     province: { type: String, required: true},
     district: {type: String, required: true},
     bloodGroup: {
@@ -30,17 +30,11 @@ const AppointmentSchema = new Schema({
         type: Number,
         required: false
     },
-    profilePicture: {
-        type: String,
-        required: true,
-        // default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
-    },
     gender:{
         type: String,
         required: false,
         enum: ['Male', 'Female', 'Other']
     },
-    reason:{type: String, required: false},
     donationAvailability:{ 
         type: Date, 
         required: false, 
