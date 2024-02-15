@@ -113,7 +113,7 @@ const listHospitals = async (req, res) => {
 module.exports = {
     addHospital, 
     getHospital,
-    login,
+    // login,
     listHospitals
 };
    
