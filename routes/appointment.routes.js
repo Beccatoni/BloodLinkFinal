@@ -6,8 +6,8 @@ const { createAppointment, listAppointments, getAppointmentById, confirmAppointm
 appointmentRoutes.post('/donate', createAppointment );
 appointmentRoutes.get('/listAppointments', listAppointments);
 appointmentRoutes.get('/getOneAppointMent/:appointmentId', getAppointmentById);
-appointmentRoutes.post('/confirmAppointment/', confirmAppointment);
-appointmentRoutes.post('/rejectAppointment', rejectAppointment)
+appointmentRoutes.put('/confirmAppointment/:appointmentId', confirmAppointment);
+appointmentRoutes.put('/rejectAppointment/:appointmentId', rejectAppointment)
 
 
 
