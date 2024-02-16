@@ -132,6 +132,36 @@ const updateHospitalProfile = async (req, res) => {
     }
   };
 
+  const updateHospitalInfo = async (req, res) => {
+    try {
+        const hospitalId = req.params.hospitalId;
+        const { hospitalName, hospitalCode, city, province, district } = req.body;
+        
+        // Check if the hospital exists
+        const hospital = await Hospital.findById(hospitalId);
+        console.log(hospital);
+        if (!hospital) {
+            return res.status(404).json({ error: 'Hospital not found' });
+        }
+
+        // Update hospital information
+        if (hospitalName) hospital.hospitalName = hospitalName;
+        if (hospitalCode) hospital.hospitalCode = hospitalCode;
+        if (city) hospital.city = city;
+        if (province) hospital.province = province;
+        if (district) hospital.district = district;
+
+        // Save the updated hospital information
+        await hospital.save();
+
+        res.status(200).json({ success: true, message: 'Hospital information updated successfully', hospital });
+    } catch (error) {
+        console.error('Error updating hospital information:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
 
 
 module.exports = {
@@ -140,5 +170,6 @@ module.exports = {
     // login,
     listHospitals,
     updateHospitalProfile,
+    updateHospitalInfo
 };
    
