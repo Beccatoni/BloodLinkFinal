@@ -98,6 +98,42 @@ const rejectAppointment = async (req, res) => {
     }
 };
 
+const updateAppointment = async (req, res, next) => {
+    const appointmentId = req.params.appointmentId; // Get the appointment ID from request parameters
+    const { fullName, mobileNumber, nationalID, email, province, bloodGroup, age, district, gender, donationAvailability } = req.body;
+
+    try {
+        // Check if the appointment exists
+        const appointment = await AppointmentModel.findById(appointmentId);
+        if (!appointment) {
+            return res.status(404).json({ success: false, message: 'Appointment not found' });
+        }
+
+        // Update appointment fields
+        appointment.fullName = fullName;
+        appointment.mobileNumber = mobileNumber;
+        appointment.nationalID = nationalID;
+        appointment.email = email;
+        appointment.province = province;
+        appointment.district = district;
+        appointment.bloodGroup = bloodGroup;
+        appointment.age = age;
+        appointment.gender = gender;
+        appointment.donationAvailability = donationAvailability;
+
+        // Save the updated appointment
+        const updatedAppointment = await appointment.save();
+        console.log(updatedAppointment)
+
+        res.status(200).json({ success: true, message: 'Appointment updated successfully', data: updatedAppointment });
+    } catch (error) {
+        console.error('Error updating appointment:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+
+
+
 
 
 
@@ -106,5 +142,6 @@ module.exports = {
     listAppointments,
     getAppointmentById,
     confirmAppointment,
-    rejectAppointment 
+    rejectAppointment,
+    updateAppointment
 };
