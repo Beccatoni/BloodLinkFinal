@@ -107,6 +107,30 @@ const listHospitals = async (req, res) => {
     }
 };
 
+const updateHospitalProfile = async (req, res) => {
+    try {
+      const hospitalId = req.params.hospitalId;
+      const { email, password } = req.body;
+      
+      // Check if the hospital exists
+      const hospital = await Hospital.findById(hospitalId);
+      if (!hospital) {
+        return res.status(404).json({ error: 'Hospital not found' });
+      }
+  
+      // Update hospital properties
+      if (email) hospital.email = email;
+      if (password) hospital.password = password;
+  
+      // Save the updated hospital
+      await hospital.save();
+      
+      res.status(200).json({ message: 'Hospital profile updated successfully' });
+    } catch (error) {
+      console.error('Error updating hospital profile:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
 
 
 
@@ -114,6 +138,7 @@ module.exports = {
     addHospital, 
     getHospital,
     // login,
-    listHospitals
+    listHospitals,
+    updateHospitalProfile,
 };
    
