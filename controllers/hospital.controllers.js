@@ -107,6 +107,7 @@ const listHospitals = async (req, res) => {
     }
 };
 
+
 const updateHospitalProfile = async (req, res) => {
     try {
       const hospitalId = req.params.hospitalId;
@@ -132,11 +133,17 @@ const updateHospitalProfile = async (req, res) => {
     }
   };
 
+  
   const updateHospitalInfo = async (req, res) => {
     try {
         const hospitalId = req.params.hospitalId;
-        const { hospitalName, hospitalCode, city, province, district } = req.body;
+        const { hospitalName, hospitalCode, city, province, district, email } = req.body;
         
+        // Check if the hospital ID is valid
+        // if (!hospitalId) {
+        //     return res.status(400).json({ error: 'Hospital ID is required' });
+        // }
+
         // Check if the hospital exists
         const hospital = await Hospital.findById(hospitalId);
         console.log(hospital);
@@ -150,6 +157,7 @@ const updateHospitalProfile = async (req, res) => {
         if (city) hospital.city = city;
         if (province) hospital.province = province;
         if (district) hospital.district = district;
+        if (email) hospital.email = email;
 
         // Save the updated hospital information
         await hospital.save();
@@ -161,6 +169,28 @@ const updateHospitalProfile = async (req, res) => {
     }
 };
 
+const deleteHospital = async (req, res) => {
+    try {
+        const hospitalId = req.params.hospitalId;
+
+        // Check if the hospital exists
+        const hospital = await Hospital.findById(hospitalId);
+        if (!hospital) {
+            return res.status(404).json({ error: 'Hospital not found' });
+        }
+
+        // Delete the hospital
+        await Hospital.findByIdAndDelete(hospitalId);
+
+        res.status(200).json({ success: true, message: 'Hospital deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting hospital:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
+
 
 
 
@@ -170,6 +200,7 @@ module.exports = {
     // login,
     listHospitals,
     updateHospitalProfile,
-    updateHospitalInfo
+    updateHospitalInfo, 
+    deleteHospital
 };
    
